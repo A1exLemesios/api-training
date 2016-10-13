@@ -20,22 +20,109 @@ produces:
   - application/json
   - application/octet-stream
 paths:
+  /shoe/{id}:
+    x-swagger-router-controller: shoe
+    get:
+      description: get a shoe
+      # define the type of response for Success "200" and Error
+      operationId: getAll
+      parameters:
+        - name: id
+          type: string
+          in: path
+          required: true
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  
   /shoe:
     # binds a127 app logic to a route
     x-swagger-router-controller: shoe
     post:
-      description: Post a new shoe 
-      # used as the method name of the controller
+      description: add a new shoe to the store
       operationId: post
+      # movie info to be stored
       parameters:
-        - name: model
-          in: query
-          description: The model of the shoe to be posted
+        - name: shoe
+          description: Shoe properties
+          in: body
           required: true
+          schema:
+            $ref: "#/definitions/Shoe"
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GeneralResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    get:
+      description: Get a shoe
+      # used as the method name of the controller
+      operationId: getOne
+      parameters:
+        - name: id
+          in: query
+          description: The id of the shoe
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    put:
+      description: Get a shoe
+      # used as the method name of the controller
+      operationId: update
+      parameters:
+        - name: id
+          in: query
+          description: The id of the shoe
+          required: true
+          type: integer
+        - name: shoe
+          in: query
+          description: The model of the shoe to be updated
           type: string
         - name: size
           in: query
-          description: The size of the shoe to be posted
+          description: The size of the shoe to be updated
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            # a pointer to a definition
+            $ref: "#/definitions/HelloWorldResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Delete a shoe
+      # used as the method name of the controller
+      operationId: delShoe
+      parameters:
+        - name: id
+          in: query
+          description: The id of the shoe
           required: true
           type: integer
       responses:
@@ -65,4 +152,28 @@ definitions:
     properties:
       message:
         type: string
+  Shoe:
+    type: object
+    properties:
+      model:
+        type: string
+        description: task object name
+      size:
+        type: number
+        description: task description
+    required:
+      - model
+      - size
+  GeneralResponse:
+    type: object
+    properties:
+      success:
+        type: number
+        description: returns 1 if successful
+      description:
+        type: string
+        description: a short comment 
+    required:
+      - success
+      - description
   
